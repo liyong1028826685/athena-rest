@@ -30,6 +30,8 @@ public class JettyServer extends AbstractContainerServer implements
 
 		if (this.minThreads != -1 && this.maxThreads != -1) {
 			BoundedThreadPool btp = new BoundedThreadPool();
+			btp.setMaxThreads(maxThreads);
+			btp.setMinThreads(minThreads);
 			server.setThreadPool(btp);
 		}
 

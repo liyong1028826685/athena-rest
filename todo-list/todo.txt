@@ -1,1 +1,2 @@
-1. Separate the conf repo and the scripts. 
+1. Separate the conf repo and the scripts.
+2. Jetty access log works but Tomcat doesn't. 

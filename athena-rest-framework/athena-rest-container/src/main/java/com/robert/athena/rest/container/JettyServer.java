@@ -1,7 +1,11 @@
 package com.robert.athena.rest.container;
 
 import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Handler;
+import org.mortbay.jetty.NCSARequestLog;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.HandlerCollection;
+import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.mortbay.thread.BoundedThreadPool;
@@ -49,7 +53,23 @@ public class JettyServer extends AbstractContainerServer implements
 		wac.setContextPath(contextPath);
 		wac.setWar(webappPath);
 
-		server.setHandler(wac);
+		// server.setHandler(wac);
+
+		// Print the access log
+		HandlerCollection handlers = new HandlerCollection();
+		RequestLogHandler requestLogHandler = new RequestLogHandler();
+		handlers.setHandlers(new Handler[] { requestLogHandler, wac });
+		server.setHandler(handlers);
+
+		NCSARequestLog requestLog = new NCSARequestLog();
+		requestLog.setFilename("jetty.access.log.yyyy_mm_dd.log");
+		// requestLog.setLogDateFormat("yyyy_MM_dd");
+		requestLog.setRetainDays(90);
+		requestLog.setAppend(true);
+		requestLog.setExtended(true);
+		requestLog.setLogCookies(false);
+		requestLog.setLogTimeZone("GMT");
+		requestLogHandler.setRequestLog(requestLog);
 
 		log.info("Starting jetty server actually.");
 		server.start();
